@@ -1,0 +1,12 @@
+{
+  "name": "radio-ptt-server",
+  "version": "1.0.0",
+  "description": "Servidor PTT para Rádio Walkie-Talkie",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.7.2"
+  }
+}
