@@ -1,5 +1,20 @@
+const http = require("http");
+const { Server } = require("socket.io");
+
 const port = process.env.PORT || 3000;
-const io = require("socket.io")(port, {
+
+// Criar um servidor HTTP para o Uptime Robot dar o "ping"
+const server = http.createServer((req, res) => {
+  if (req.url === "/") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("PTT Server is Alive!");
+  } else {
+    res.writeHead(404);
+    res.end();
+  }
+});
+
+const io = new Server(server, {
   cors: { origin: "*" }
 });
 
@@ -16,6 +31,7 @@ io.on("connection", (socket) => {
     const name = userName || `User_${socket.id.substring(0, 4)}`;
     connectedUsers.set(socket.id, name);
     io.to(roomName).emit("user_list", Array.from(connectedUsers.values()));
+
     if (activeSpeakers[roomName]) {
       socket.emit("speaker_started", activeSpeakers[roomName]);
     }
@@ -50,3 +66,5 @@ io.on("connection", (socket) => {
     io.to(roomName).emit("user_list", Array.from(connectedUsers.values()));
   });
 });
+
+server.listen(port);
